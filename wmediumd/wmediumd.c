@@ -724,7 +724,9 @@ static int process_messages_cb(struct nl_msg *msg, void *arg)
 			if (data_len < 6 + 6 + 4)
 				goto out;
 
-			sender = get_station_by_addr(ctx, src);
+			u8 lookup[6] = {hwaddr[0],hwaddr[1],hwaddr[2],hwaddr[3],hwaddr[4],hwaddr[5]};
+			lookup[0] = lookup[0] ^ 0b1000000;
+			sender = get_station_by_addr(ctx, lookup);
 			if (!sender) {
 				w_flogf(ctx, LOG_ERR, stderr, "Unable to find sender station " MAC_FMT "\n", MAC_ARGS(src));
 				goto out;
